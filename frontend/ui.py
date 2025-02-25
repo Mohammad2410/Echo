@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-st.set_page_config(page_title="Hybrid Search Chat", layout="wide")
+st.set_page_config(page_title="Echo Chat", layout="wide")
 
 st.sidebar.title("Navigation")
 tab = st.sidebar.radio("Choose a tab", ["➕ Add Post", "💬 Search Chat"])
