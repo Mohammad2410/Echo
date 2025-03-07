@@ -33,3 +33,8 @@ def search(request):
     results = search_posts(query)  # Make sure this function works correctly
 
     return Response({"results": results})
+from rest_framework import generics
+from .serializers import RegisterSerializer
+
+class RegisterView(generics.CreateAPIView):
+    serializer_class = RegisterSerializer

@@ -48,3 +48,63 @@ elif tab == "💬 Search Chat":
         add_message("assistant", response)
         with st.chat_message("assistant"):
             st.markdown(response)
+import streamlit as st
+import requests
+
+# Streamlit UI
+st.title("Login")
+
+# Input fields for username and password
+username = st.text_input("Username")
+password = st.text_input("Password", type="password")
+
+# Button to submit login form
+if st.button("Login"):
+    # Send login request to Django backend
+    response = requests.post("http://localhost:8000/api/token/", data={
+        "username": username,
+        "password": password
+    })
+
+    if response.status_code == 200:
+        # Successful login
+        token = response.json().get("access")
+        st.success("Login successful!")
+        st.session_state['token'] = token
+    else:
+        # Failed login
+        st.error("Login failed. Please check your credentials.")
+
+# Example of using the token to access a protected endpoint
+if 'token' in st.session_state:
+    headers = {"Authorization": f"Bearer {st.session_state['token']}"}
+    protected_response = requests.get("http://localhost:8000/protected-endpoint/", headers=headers)
+
+    if protected_response.status_code == 200:
+        st.write("Access to protected data:", protected_response.json())
+    else:
+        st.error("Failed to access protected data.")
+
+   # Streamlit UI
+st.title("Register")
+
+# Input fields for registration
+reg_username = st.text_input("Username", key="reg_username")
+reg_password = st.text_input("Password", type="password", key="reg_password")
+reg_email = st.text_input("Email", key="reg_email")
+
+# Button to submit registration form
+if st.button("Register"):
+    # Send registration request to Django backend
+    reg_response = requests.post("http://localhost:8000/register/", data={
+        "username": reg_username,
+        "password": reg_password,
+        "email": reg_email
+    })
+
+    if reg_response.status_code == 201:
+        # Successful registration
+        st.success("Registration successful! You can now log in.")
+    else:
+        # Failed registration
+        st.error("Registration failed. Please check your details and try again.")
